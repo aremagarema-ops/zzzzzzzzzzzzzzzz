@@ -349,6 +349,8 @@ export const BulkCustomerForm = ({ onSave, onCancel }: BulkCustomerFormProps) =>
                           <Input
                             id={`monthly_price_${index}`}
                             type="number"
+                            step="0.01"
+                            min="0"
                             value={customer.monthly_price}
                             onChange={(e) => updateCustomer(index, 'monthly_price', e.target.value)}
                             placeholder="السعر بالجنيه"
@@ -485,6 +487,8 @@ export const BulkCustomerForm = ({ onSave, onCancel }: BulkCustomerFormProps) =>
                             <Input
                               id={`monthly_price_${index}`}
                               type="number"
+                              step="0.01"
+                              min="0"
                               value={customer.monthly_price}
                               onChange={(e) => updateCustomer(index, 'monthly_price', e.target.value)}
                               placeholder="السعر بالجنيه"

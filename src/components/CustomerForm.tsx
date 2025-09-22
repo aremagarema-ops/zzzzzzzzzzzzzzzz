@@ -235,6 +235,8 @@ export const CustomerForm = ({ customer, onSave, onCancel }: CustomerFormProps) 
                 <Input
                   id="monthly_price"
                   type="number"
+                  step="0.01"
+                  min="0"
                   value={formData.monthly_price || ''}
                   onChange={(e) => setFormData({ 
                     ...formData, 

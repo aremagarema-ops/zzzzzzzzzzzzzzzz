@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import { Users, DollarSign, CheckCircle, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -19,10 +21,13 @@ export const Dashboard = () => {
     totalRevenue: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [notes, setNotes] = useState("");
+  const [savingNotes, setSavingNotes] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     fetchStats();
+    loadNotes();
   }, []);
 
   const fetchStats = async () => {
@@ -56,6 +61,31 @@ export const Dashboard = () => {
     }
   };
 
+  const loadNotes = () => {
+    const savedNotes = localStorage.getItem('dashboard-notes');
+    if (savedNotes) {
+      setNotes(savedNotes);
+    }
+  };
+
+  const saveNotes = async () => {
+    setSavingNotes(true);
+    try {
+      localStorage.setItem('dashboard-notes', notes);
+      toast({
+        title: "تم الحفظ",
+        description: "تم حفظ الملاحظات بنجاح",
+      });
+    } catch (error) {
+      toast({
+        title: "خطأ",
+        description: "فشل في حفظ الملاحظات",
+        variant: "destructive",
+      });
+    } finally {
+      setSavingNotes(false);
+    }
+  };
   const StatCard = ({ title, value, icon: Icon, className = "" }: {
     title: string;
     value: string | number;
@@ -123,6 +153,29 @@ export const Dashboard = () => {
         />
       </div>
 
+      {/* ملاحظات المدير */}
+      <Card className="animate-scale-in bg-black/80 text-white border-gray-600">
+        <CardHeader>
+          <CardTitle className="text-center">ملاحظات المدير</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="اكتب ملاحظاتك هنا..."
+            className="min-h-[120px] text-right bg-gray-800/50 border-gray-600 text-white placeholder:text-gray-400"
+          />
+          <div className="flex justify-center">
+            <Button
+              onClick={saveNotes}
+              disabled={savingNotes}
+              className="hover-scale bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700"
+            >
+              {savingNotes ? 'جاري الحفظ...' : 'حفظ الملاحظات'}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
       <div className="grid gap-6 md:grid-cols-2">
         <Card className="animate-scale-in bg-black/80 text-white border-gray-600">
           <CardHeader>
